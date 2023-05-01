@@ -18,3 +18,10 @@ jobs:
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: Changed Files
         uses: tj-actions/changed-files@v35.9.2
+        with:
+          files: |
+            feedback/*.xlsx
+      - name: Run step if any of the listed files above change
+        if: steps.changed-files-specific.outputs.any_changed == 'true'
+          run: |
+            echo "One or more files listed above has changed."
