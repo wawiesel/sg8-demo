@@ -83,7 +83,7 @@ def process_excel_file(input_file):
         c_rating = row["Rating"]
         if c_rating != "":
             # extract data
-            iden = str(row["Identifier"])
+            c_iden = str(row["Identifier"])
             full_case = str(row["Case"])
             c_rev = int(row["Rev."])
             add_cases = str(row["Add Cases*"])
@@ -96,14 +96,20 @@ def process_excel_file(input_file):
 
                 # reconstruct full_case identifier
                 if case == -1:
-                    c_full_case = iden + "-REJ"  # rejected
+                    c_case="REJ"  # rejected
                 else:
-                    c_full_case = "{}-{:03d}".format(iden, case)
+                    c_case = "{:03d}".format(case)
+                c_mat, c_form, c_spec, c_index = c_iden.split('-')
 
                 # create a record with all the data
                 records.append(
                     {
-                        "Case": str(c_full_case),
+                        "Identifier": str(c_iden),
+                        "Mat": str(c_mat),
+                        "Form": str(c_form),
+                        "Spec": str(c_spec),
+                        "Index": str(c_index),
+                        "Case": str(c_case),
                         "Rev": int(c_rev),
                         "Author": str(c_author),
                         "Rating": "{:2.1f}".format(c_rating),
