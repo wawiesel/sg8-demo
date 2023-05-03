@@ -1,0 +1,33 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: List files
+        run: |
+          tree .
+      - name: Install python deps
+        uses: py-actions/py-dependency-install@v4.0.0
+        with:
+          path: "scripts/requirements.txt"
+          update-pip: "false"
+          update-setuptools: "false"
+          update-wheel: "false"
+      - name: Get new feedback files
+        id: changed-files-specific
+        uses: tj-actions/changed-files@v35.9.2
+        with:
+          files: |
+            feedback/*.xlsx
+      - name: Update summary
+        run: |
+          for file in ${{ steps.changed-files-specific.outputs.all_changed_files }}; do
+            python3 ${{ github.workspace }}/scripts/sg8-v1-post.py $file ${{ github.workspace }}/summary.csv
+          done
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v9.1.2
+
